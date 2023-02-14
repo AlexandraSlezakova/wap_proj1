@@ -1,44 +1,40 @@
 /**
  * @file Contains a function to generate the property names of the object and its prototype chain
  * @author Alexandra Slezakova <xsleza20@stud.fit.vutbr.cz>
+ * @module iterate
  */
 
 'use strict'
 
 /***
  * Filters object properties by descriptor name.
- * @param obj Object that contains properties.
- * @param descriptors Object that contains one or more property descriptors.
- * @returns {*[]}
+ * @function filterObjectProperties
+ *
+ * @param {Object} obj Object that contains properties.
+ * @param {Object} descriptors Object that contains one or more property descriptors.
+ * @returns {string[]} Filtered property names
  */
 function filterObjectProperties(obj, descriptors)
 {
-    let properties = [];
-
-    for (let property of Object.keys(obj)) {
-        let isDescriptor = true;
-
+    return Object.getOwnPropertyNames(obj).filter(property => {
         for (let descriptor in descriptors) {
             const propertyDescriptor = Object.getOwnPropertyDescriptor(obj, property)[descriptor];
             if (propertyDescriptor !== descriptors[descriptor]) {
-                isDescriptor = false;
-                break;
+                return false;
             }
         }
 
-        if (isDescriptor) {
-            properties.push(property);
-        }
-    }
-
-    return properties;
+        return true;
+    });
 }
 
 /***
- * Returns the names of properties for a given object and its prototype chain.
- * @param obj Object contains the properties that should be generated.
- * @param descriptors Object that contains one or more property descriptors.
- * @returns {string[]|*[]}
+ * Returns the names of the properties for a given object and its prototype chain.
+ * @function getObjectProperties
+ *
+ * @param {Object} obj Object contains the properties that should be generated.
+ * @param {Object} descriptors Object that contains one or more property descriptors.
+ * @returns {string[]} Array of property names
  */
 function getObjectProperties(obj, descriptors)
 {
@@ -46,34 +42,34 @@ function getObjectProperties(obj, descriptors)
     let properties = [];
 
     while (obj_ !== null) {
-        let objectProperties;
-
-        if (descriptors && Object.keys(descriptors).length) {
-            objectProperties = filterObjectProperties(obj_, descriptors);
-        }
-        else {
-            objectProperties = Object.keys(obj_);
-        }
+        // filter object properties
+        let objectProperties = filterObjectProperties(obj_, descriptors);
 
         properties.unshift(...objectProperties);
         obj_ = Object.getPrototypeOf(obj_);
     }
 
-    // prototype and input object keys
     return properties;
 }
 
-/***
+/**
  * Property generator.
- * @param obj Object contains the properties that should be generated.
- * @param descriptors Object that contains one or more property descriptors.
- * @returns {Generator<*|any, void, *>}
+ * @function iterateProperties
+ *
+ * @param {Object|undefined} obj Object contains the properties that should be generated.
+ * @param {Object} descriptors Object that contains one or more property descriptors.
+ * @yields {string|undefined} Property name
  */
-export function* iterateProperties(obj, descriptors = undefined)
+export function* iterateProperties(obj, descriptors = {})
 {
-    let properties = getObjectProperties(obj, descriptors);
+    if (obj === undefined) {
+        yield undefined;
+    }
+    else {
+        let properties = getObjectProperties(obj, descriptors);
 
-    for (let property of properties) {
-        yield property;
+        for (let property of properties) {
+            yield property;
+        }
     }
 }
