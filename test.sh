@@ -1,3 +1,7 @@
 #!/bin/bash
 
-node --experimental-module tests.mjs
+if [ -z "$1" ]; then
+    npm run test
+elif [ "$1" == 'install' ]; then
+    npm install
+fi
