@@ -1,5 +1,5 @@
 /**
- * @file Test script for iterate.mjs
+ * @file Test script for iterate.mjs, node v18.14.1
  * @author Alexandra Slezakova <xsleza20@stud.fit.vutbr.cz>
  */
 
