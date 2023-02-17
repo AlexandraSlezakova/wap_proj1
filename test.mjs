@@ -18,9 +18,7 @@ describe('Undefined Object', function () {
 
 describe('Empty Object', function () {
     it('should return (Object.prototype properties)', function () {
-        let obj = {}
-
-        assert.deepEqual([...iterateProperties(obj)], objectPrototypeProperties);
+        assert.deepEqual([...iterateProperties({})], objectPrototypeProperties);
     });
 });
 
@@ -143,7 +141,7 @@ describe('Class', function () {
         }
     }
 
-    it('should return width length', function () {
+    it('should return width length area', function () {
         assert.deepEqual([...iterateProperties(new Square(2, 3), { enumerable: true })], ['width', 'length', 'area']);
     });
 });
@@ -174,6 +172,10 @@ describe('Class Inheritance', function () {
             this.country = country;
         }
     }
+
+    it('should return name breed', function () {
+        assert.deepEqual([...iterateProperties(new Dog('Tom', 'Poodle'), { enumerable: true })], ['name', 'breed']);
+    });
 
     it('should return name weight country', function () {
         assert.deepEqual([...iterateProperties(new Lion('Tom', 500, 'Angola'), { enumerable: true })], ['name', 'weight', 'country']);

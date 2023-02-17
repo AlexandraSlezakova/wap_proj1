@@ -11,15 +11,16 @@
  * @function filterObjectProperties
  *
  * @param {Object} obj Object that contains properties.
- * @param {Object} descriptors Object that contains one or more property descriptors.
+ * @param {Object} descriptors Object that contains property descriptors.
  * @returns {string[]} Filtered property names
  */
 function filterObjectProperties(obj, descriptors)
 {
     return Object.getOwnPropertyNames(obj).filter(property => {
+        const propertyDescriptor = Object.getOwnPropertyDescriptor(obj, property);
+
         for (let descriptor in descriptors) {
-            const propertyDescriptor = Object.getOwnPropertyDescriptor(obj, property)[descriptor];
-            if (propertyDescriptor !== descriptors[descriptor]) {
+            if (propertyDescriptor[descriptor] !== descriptors[descriptor]) {
                 return false;
             }
         }
